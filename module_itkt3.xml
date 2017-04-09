@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_itkt3" default="compile.module.itkt3">
+  <dirname property="module.itkt3.basedir" file="${ant.file.module_itkt3}"/>
+  
+  <property name="module.jdk.home.itkt3" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.itkt3" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.itkt3" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.itkt3" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="itkt3.output.dir" value="${module.itkt3.basedir}/out/production/itkt3"/>
+  <property name="itkt3.testoutput.dir" value="${module.itkt3.basedir}/out/test/itkt3"/>
+  
+  <path id="itkt3.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="itkt3.module.production.classpath">
+    <path refid="${module.jdk.classpath.itkt3}"/>
+  </path>
+  
+  <path id="itkt3.runtime.production.module.classpath">
+    <pathelement location="${itkt3.output.dir}"/>
+  </path>
+  
+  <path id="itkt3.module.classpath">
+    <path refid="${module.jdk.classpath.itkt3}"/>
+    <pathelement location="${itkt3.output.dir}"/>
+  </path>
+  
+  <path id="itkt3.runtime.module.classpath">
+    <pathelement location="${itkt3.testoutput.dir}"/>
+    <pathelement location="${itkt3.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.itkt3">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.itkt3">
+    <patternset refid="excluded.from.module.itkt3"/>
+  </patternset>
+  
+  <path id="itkt3.module.sourcepath">
+    <dirset dir="${module.itkt3.basedir}">
+      <include name="src"/>
+      <include name="gen"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.itkt3" depends="compile.module.itkt3.production,compile.module.itkt3.tests" description="Compile module itkt3"/>
+  
+  <target name="compile.module.itkt3.production" depends="register.custom.compilers" description="Compile module itkt3; production classes">
+    <mkdir dir="${itkt3.output.dir}"/>
+    <javac2 destdir="${itkt3.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.itkt3}/javac">
+      <compilerarg line="${compiler.args.itkt3}"/>
+      <bootclasspath refid="itkt3.module.bootclasspath"/>
+      <classpath refid="itkt3.module.production.classpath"/>
+      <src refid="itkt3.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.itkt3"/>
+    </javac2>
+    
+    <copy todir="${itkt3.output.dir}">
+      <fileset dir="${module.itkt3.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.itkt3.basedir}/gen">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.itkt3.tests" depends="register.custom.compilers,compile.module.itkt3.production" description="compile module itkt3; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.itkt3" description="cleanup module">
+    <delete dir="${itkt3.output.dir}"/>
+    <delete dir="${itkt3.testoutput.dir}"/>
+  </target>
+</project>
